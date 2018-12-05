@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "481477360809",
+    "firebase_url": "https://loginwithemail-ab8d8.firebaseio.com",
+    "project_id": "loginwithemail-ab8d8",
+    "storage_bucket": "loginwithemail-ab8d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481477360809:android:206d526319fd5c62",
+        "android_client_info": {
+          "package_name": "com.example.palannath.loginwithemail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481477360809-8559u1jv46uia7vl8nmk15pplqeffn0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoKDS0AR3gW8_1KHho3q0Z61QtD2AAqLQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

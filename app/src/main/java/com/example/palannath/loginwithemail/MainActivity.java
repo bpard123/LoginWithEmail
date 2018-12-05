@@ -1,0 +1,113 @@
+package com.example.palannath.loginwithemail;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class MainActivity extends AppCompatActivity {
+
+
+    private EditText Name;
+    private EditText Password;
+    private TextView Info;
+    private Button button;
+    private int counter = 5;
+    private TextView registartionPage;
+    private FirebaseAuth firebaseAuth;
+    private ProgressDialog progressDialog;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Name = (EditText)findViewById(R.id.etName);
+        Password = (EditText)findViewById(R.id.etPassword);
+        Info = (TextView)findViewById(R.id.tvInfo);
+        button = (Button)findViewById(R.id.btnLogin);
+        registartionPage = (TextView)findViewById(R.id.tvRegister);
+        //Info.setText("No Of Attempts Remaining: 5");
+        firebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user!= null)
+        {
+            finish();
+            Intent intent1 = new Intent(MainActivity.this,SecondActivity.class);
+            startActivity(intent1);
+        }
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validate(Name.getText().toString(),Password.getText().toString());
+            }
+        });
+
+        registartionPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ij= new Intent(MainActivity.this,RegistrationActivity.class);
+                startActivity(ij);
+            }
+        });
+    }
+
+    private void validate(String userName , String userPassword)
+    {
+
+        progressDialog.setMessage("Wait for a moment");
+        progressDialog.show();
+        firebaseAuth.signInWithEmailAndPassword(userName,userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful())
+                {
+                    progressDialog.dismiss();
+                    //Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
+                    CheckEmailVerification();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this,"Login Failed",Toast.LENGTH_LONG).show();
+                    counter--;
+                   // Info.setText("No Of Attempts Remaining :"+counter);
+                    progressDialog.dismiss();
+                    if(counter ==0)
+                    {
+                        button.setEnabled(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private void CheckEmailVerification()
+    {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Boolean emailflag = firebaseUser.isEmailVerified();
+        if(emailflag)
+        {
+            finish();
+            Intent in = new Intent(MainActivity.this,SecondActivity.class);
+            startActivity(in);
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this,"Please Verify Your Email",Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+        }
+    }
+}
